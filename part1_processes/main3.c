@@ -9,30 +9,28 @@ void ParentProcess(void);
 int random_num();
 
 void main(void) {
-  pid_t pid, pid_2;
-  int status;
+  pid_t pid;
+  int x, status;
 
-  pid = fork(); // fork for first CHildProcess
-  if (pid < 0) {
-    exit(1);
-  }
-  else if (pid == 0){
-    ChildProcess();
+  for(x = 0; x < 2; x++) {
+    pid = fork();
+    if (pid < 0) {
+      exit(1);
+    }
+    else if (pid == 0){
+      ChildProcess();
+    }
   }
 
-  pid_2 = fork(); // fork for second ChildProcess
-  if (pid_2 < 0) {
-    exit(1);
-  }
-  else if (pid == 0) {
-    ChildProcess();
-  }
-  else {
+  if (pid != 0) {
     status = wait(NULL);
     ParentProcess();
     pid = wait(&status);
-    exit(0);
   }
+  else {
+    printf("Children complete!!!\n");
+  }
+  exit(0);
 }
 
 int x;
